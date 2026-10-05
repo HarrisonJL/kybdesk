@@ -1,0 +1,353 @@
+status substring check instead of exact
+---
+    if overview["status_text"] != "Active":
+        bad.append("status:" + overview["status_text"])
+---
+    if "Active" not in overview["status_text"]:
+        bad.append("status:" + overview["status_text"])
+===
+overdue only from banner, ignore due date
+---
+    accounts_overdue = overview["accounts_overdue_label"] or (
+        overview["accounts_due"] != "" and overview["accounts_due"] < today_iso)
+---
+    accounts_overdue = overview["accounts_overdue_label"]
+===
+due date inclusive (off by one)
+---
+        overview["confirmation_due"] != "" and overview["confirmation_due"] < today_iso)
+---
+        overview["confirmation_due"] != "" and overview["confirmation_due"] <= today_iso)
+===
+banner check unscoped (company name trips it)
+---
+    out["accounts_overdue_label"] = any("Accounts overdue" in n for n in notices)
+---
+    out["accounts_overdue_label"] = "ACCOUNTS OVERDUE" in page.upper()
+===
+identity binding removed
+---
+        if overview["company_number_on_page"] != cn:
+            unverified.append("identity_mismatch")
+---
+        pass
+===
+deadlines-unparsed fail-closed removed
+---
+    if overview["status_text"] == "Active" and (overview["accounts_due"] == "" or overview["confirmation_due"] == ""):
+        unverified.append("filing_deadlines_unparsed")
+---
+    pass
+===
+LEI binding ignores registration authority
+---
+    if registered_at.get("id") != COMPANIES_HOUSE_RA or _soft_company_number(entity.get("registeredAs")) != cn:
+---
+    if _soft_company_number(entity.get("registeredAs")) != cn and False:
+===
+retired LEI accepted
+---
+LEI_CURRENT_STATUSES = ("ISSUED", "LAPSED", "PENDING_TRANSFER", "PENDING_ARCHIVAL")
+---
+LEI_CURRENT_STATUSES = ("ISSUED", "LAPSED", "PENDING_TRANSFER", "PENDING_ARCHIVAL", "RETIRED")
+===
+DS01 ignored
+---
+STRIKE_OFF_FORMS = {"DS01": True, "LLDS01": True, "DS02": False, "LLDS02": False}
+---
+STRIKE_OFF_FORMS = {"DS01": False, "LLDS01": True, "DS02": False, "LLDS02": False}
+===
+DS02 withdrawal ignored
+---
+            strike_off_pending = STRIKE_OFF_FORMS[r["type"]]
+            break
+---
+            strike_off_pending = strike_off_pending or STRIKE_OFF_FORMS[r["type"]]
+===
+LLM grounding removed
+---
+    if not _grounded_in_filings(evidence, rows):
+        return [False, None]
+    return [True, _squash(evidence)[:MAX_EVIDENCE_LEN]]
+---
+    return [True, str(evidence)[:MAX_EVIDENCE_LEN]]
+===
+minimum quote length removed
+---
+    if len(quote) < MIN_EVIDENCE_LEN:
+        return False
+---
+    if len(quote) < 1:
+        return False
+===
+validator skips fact comparison
+---
+    if leader.get("facts") != my_facts:
+        return False
+---
+    if leader.get("facts") is None:
+        return False
+===
+validator trusts leader's adverse quote without grounding
+---
+        return _grounded_in_filings(leader.get("evidence"), my_rows)
+---
+        return True
+===
+validator lets LLM claim through outside GOOD_STANDING
+---
+        return leader.get("adverse") is False and leader.get("evidence") is None
+---
+        return True
+===
+validator ignores LLM disagreement
+---
+    if leader.get("adverse") is not my_adverse:
+        return False
+---
+    if leader.get("adverse") is None:
+        return False
+===
+freshness ignored
+---
+        return 0 <= age <= max_age_seconds
+---
+        return True
+===
+consumer view accepts AT_RISK
+---
+        if a.verdict != "GOOD_STANDING":
+            return False
+        age
+---
+        if a.verdict not in ("GOOD_STANDING", "AT_RISK"):
+            return False
+        age
+===
+officer delta never flags change
+---
+    return "UNCHANGED" if previous_value == current_value else "CHANGED"
+---
+    return "UNCHANGED"
+===
+first-statement wording regression
+---
+    m = re.search(r"(?:Next|First) statement date
+---
+    m = re.search(r"(?:Next) statement date
+===
+LEI checksum not enforced
+---
+    _require(_lei_checksum_ok(lei), "lei must be a valid 20-character ISO 17442 LEI (checksum failed)")
+---
+    _require(len(lei) == 20, "lei must be 20 chars")
+===
+company number URL injection allowed
+---
+    _require(re.fullmatch(r"[A-Z0-9]{8}", cn) is not None,
+---
+    _require(len(cn) >= 8,
+===
+officer window completeness always true
+---
+    window_complete = bool(rows) and all_dated and (
+        len(rows) < FILINGS_PER_PAGE or min(r["date"] for r in rows) < window_start)
+---
+    window_complete = bool(rows)
+===
+officers page not tied to company
+---
+    elif marker not in of_page:
+        unverified.append("identity_mismatch:officers")
+---
+    elif False:
+        unverified.append("identity_mismatch:officers")
+===
+filing page not tied to company
+---
+    elif marker not in fh_page:
+        unverified.append("identity_mismatch:filing_history")
+---
+    elif False:
+        unverified.append("identity_mismatch:filing_history")
+===
+GLEIF record id not checked
+---
+    if data.get("id") != lei:
+        return ["GLEIF_RECORD_MISMATCH", ""]
+---
+    if False:
+        return ["GLEIF_RECORD_MISMATCH", ""]
+
+===
+approval ignores the filing-deadline clamp
+---
+            if due < expiry:
+                expiry = due
+---
+            if False:
+                expiry = due
+===
+approval lasts a year
+---
+APPROVAL_DAYS = 30
+---
+APPROVAL_DAYS = 365
+===
+approval can expire before it was granted
+---
+    return max(expiry, attested_at)
+---
+    return expiry
+===
+non-approvals carry a future valid_until
+---
+        record.valid_until = _approval_expiry(now, facts) if verdict == "GOOD_STANDING" else now
+---
+        record.valid_until = _approval_expiry(now, facts)
+===
+get_approval ignores the verdict
+---
+        if a.verdict != "GOOD_STANDING":
+            reason = "VERDICT_" + a.verdict
+---
+        if False:
+            reason = "VERDICT_" + a.verdict
+===
+get_approval ignores revocation
+---
+        elif e.revoked:
+            reason = "REVOKED"
+---
+        elif False:
+            reason = "REVOKED"
+===
+get_approval ignores expiry
+---
+        elif not now < a.valid_until:
+            reason = "EXPIRED"
+---
+        elif False:
+            reason = "EXPIRED"
+===
+approval still valid at valid_until
+---
+        elif not now < a.valid_until:
+---
+        elif now > a.valid_until:
+===
+get_approval ignores the caller's max age
+---
+        elif not 0 <= age <= max_age_seconds:
+            reason = "STALE"
+---
+        elif False:
+            reason = "STALE"
+===
+is_approved always true
+---
+        return self.get_approval(company_number, max_age_seconds)["approved"]
+---
+        return True
+===
+changed register does not revoke
+---
+        if outcome == "CHANGED":
+            entity.revoked = True
+---
+        if outcome == "CHANGED":
+            pass
+===
+re-attesting does not clear a revocation
+---
+        entity.revoked = False  # a fresh full read supersedes any earlier tripwire
+---
+        pass
+===
+probe ignores a changed filing deadline
+---
+PROBE_FIELDS = ("status_text", "accounts_due", "confirmation_due", "accounts_overdue", "confirmation_overdue")
+---
+PROBE_FIELDS = ("status_text", "confirmation_due", "accounts_overdue", "confirmation_overdue")
+===
+probe ignores a changed status
+---
+PROBE_FIELDS = ("status_text", "accounts_due", "confirmation_due", "accounts_overdue", "confirmation_overdue")
+---
+PROBE_FIELDS = ("accounts_due", "confirmation_due", "accounts_overdue", "confirmation_overdue")
+===
+unreadable probe treated as a reading
+---
+    if not probe["readable"]:
+        return ["UNREADABLE", ["overview_unreadable"]]
+---
+    if False:
+        return ["UNREADABLE", ["overview_unreadable"]]
+===
+probe accepts another company's page
+---
+        "readable": http == 200 and ov["company_number_on_page"] == cn and ov["status_text"] != "",
+---
+        "readable": http == 200 and ov["status_text"] != "",
+===
+probe validator accepts any leader
+---
+            return leader == _probe_facts(cn, today, _fetch(CH_COMPANY_BASE + cn))
+---
+            return isinstance(leader, dict)
+===
+probe on a non-approval allowed
+---
+        _require(latest.verdict == "GOOD_STANDING", "the latest attestation is not an approval: attest again")
+---
+        _require(True, "the latest attestation is not an approval: attest again")
+===
+probe on a revoked approval allowed
+---
+        _require(not entity.revoked, "approval already revoked: attest again")
+---
+        _require(True, "approval already revoked: attest again")
+===
+batch size unbounded
+---
+        _require(1 <= len(company_numbers) <= MAX_BATCH, f"a batch holds 1-{MAX_BATCH} companies")
+---
+        _require(len(company_numbers) >= 1, f"a batch holds 1-{MAX_BATCH} companies")
+===
+batch allows a company twice
+---
+        _require(len(set(cns)) == len(cns), "a company can appear once per batch")
+---
+        _require(True, "a company can appear once per batch")
+===
+batch allows unregistered companies
+---
+            _require(cn in self.entities, f"company_number {cn} not registered")
+---
+            _require(True, f"company_number {cn} not registered")
+===
+batch validator accepts a dropped company
+---
+            if not isinstance(items, list) or len(items) != len(targets):
+                return False
+---
+            if not isinstance(items, list):
+                return False
+===
+batch validator needs only one company to agree
+---
+            return all(_validator_item(cn, lei, today, item) for (cn, lei), item in zip(targets, items))
+---
+            return any(_validator_item(cn, lei, today, item) for (cn, lei), item in zip(targets, items))
+===
+history skips by position instead of following the chain
+---
+            i = int(a.previous_id)
+---
+            i = i - 1
+===
+history chain not recorded
+---
+        record.previous_id = entity.latest_id if has_previous else u32(0)
+---
+        record.previous_id = u32(0)

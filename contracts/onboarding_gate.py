@@ -1,0 +1,149 @@
+# v0.1.0
+# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
+
+# OnboardingGate - a minimal consumer of KYB Desk, proving an approval can
+# gate real actions on-chain: a company can only be onboarded as a supplier
+# while KYB Desk approves it, and - the point of KYB Desk's expiry and
+# tripwire - a payment is only made if the company is approved AT THE TIME
+# OF PAYMENT. Onboarding is a record, never a standing permission: once an
+# onboarded supplier's approval expires, is revoked by a probe, or its
+# standing is no longer GOOD_STANDING, it can't be paid until KYB Desk
+# approves it again.
+#
+# GenVM v0.2.11 conventions (locally tested source of truth);
+# contracts/onboarding_gate_studio_next.py is the deployed port.
+# Header must end in a blank line (real GenVM v0.2.11 requirement).
+
+from genlayer import *
+import datetime
+import re
+
+MAX_NAME_LEN = 100
+MAX_PAGE_LIMIT = 50
+
+
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise gl.vm.UserError(message)
+
+
+def _now() -> datetime.datetime:
+    return datetime.datetime.fromisoformat(gl.message_raw['datetime'])
+
+
+# Companies House numbers, as KYB Desk normalises them: 8 characters, bare
+# digits re-padded. Done here as well so every check that needs no
+# cross-contract call runs first.
+def _normalize(raw: str) -> str:
+    cn = re.sub(r"\s+", "", raw).upper()
+    if re.fullmatch(r"\d{1,8}", cn):
+        cn = cn.zfill(8)
+    _require(re.fullmatch(r"[A-Z0-9]{8}", cn) is not None, "company_number must be a Companies House number")
+    return cn
+
+
+@allow_storage
+class Vendor:
+    name: str
+    onboarded_by: Address
+    onboarded_at: datetime.datetime
+    attestation_id: u32  # the KYB Desk attestation that approved it
+    approved_until: str  # that approval's valid_until, as KYB Desk recorded it
+
+
+@allow_storage
+class Payment:
+    company_number: str
+    amount: u256
+    attestation_id: u32  # the approval in force when this was paid
+    recorded_at: datetime.datetime
+
+
+class OnboardingGate(gl.Contract):
+    owner: Address
+    kyb_address: Address
+    max_age_seconds: u32
+    vendors: TreeMap[str, Vendor]
+    payments: DynArray[Payment]
+    paid: TreeMap[str, u256]
+
+    def __init__(self, kyb_address: str, max_age_seconds: u32) -> None:
+        _require(max_age_seconds > 0, "max_age_seconds must be positive")
+        self.owner = gl.message.sender_address
+        self.kyb_address = Address(kyb_address)
+        self.max_age_seconds = max_age_seconds
+
+    # Records a supplier - only while KYB Desk approves the company.
+    @gl.public.write
+    def onboard(self, company_number: str, name: str) -> None:
+        _require(gl.message.sender_address == self.owner, "only the owner can onboard suppliers")
+        cn = _normalize(company_number)
+        _require(1 <= len(name) <= MAX_NAME_LEN, f"name must be 1-{MAX_NAME_LEN} characters")
+        _require(cn not in self.vendors, "already onboarded")
+        approval = self._approval(cn)
+        _require(approval["approved"], f"onboarding {cn} refused: KYB Desk says {approval['reason']}")
+
+        vendor = self.vendors.get_or_insert_default(cn)
+        vendor.name = name
+        vendor.onboarded_by = gl.message.sender_address
+        vendor.onboarded_at = _now()
+        vendor.attestation_id = u32(approval["attestation_id"])
+        vendor.approved_until = approval["valid_until"]
+
+    # Pays an onboarded supplier - only if KYB Desk approves the company
+    # right now, not merely when it was onboarded.
+    @gl.public.write
+    def pay(self, company_number: str, amount: u256) -> None:
+        _require(gl.message.sender_address == self.owner, "only the owner can pay suppliers")
+        cn = _normalize(company_number)
+        _require(amount > 0, "amount must be positive")
+        _require(cn in self.vendors, "supplier not onboarded")
+        approval = self._approval(cn)
+        _require(approval["approved"], f"payment to {cn} blocked: KYB Desk says {approval['reason']}")
+
+        p = self.payments.append_new_get()
+        p.company_number = cn
+        p.amount = amount
+        p.attestation_id = u32(approval["attestation_id"])
+        p.recorded_at = _now()
+        self.paid[cn] = u256(self.paid.get(cn, u256(0)) + amount)
+
+    def _approval(self, cn: str) -> dict:
+        desk = gl.get_contract_at(self.kyb_address)
+        return desk.view().get_approval(cn, self.max_age_seconds)
+
+    @gl.public.view
+    def get_vendor(self, company_number: str) -> dict:
+        cn = _normalize(company_number)
+        _require(cn in self.vendors, "supplier not onboarded")
+        v = self.vendors[cn]
+        return {"company_number": cn, "name": v.name, "onboarded_by": v.onboarded_by.as_hex,
+                "onboarded_at": v.onboarded_at.isoformat(), "attestation_id": v.attestation_id,
+                "approved_until": v.approved_until, "paid": self.paid.get(cn, u256(0))}
+
+    @gl.public.view
+    def list_vendors(self) -> list:
+        return [{"company_number": cn, "name": v.name, "paid": self.paid.get(cn, u256(0))}
+                for cn, v in self.vendors.items()]
+
+    @gl.public.view
+    def total_paid(self, company_number: str) -> int:
+        return self.paid.get(_normalize(company_number), u256(0))
+
+    @gl.public.view
+    def get_payments(self, offset: u32, limit: u32) -> list:
+        limit = min(limit, MAX_PAGE_LIMIT)
+        out = []
+        i = len(self.payments) - 1 - offset
+        while i >= 0 and len(out) < limit:
+            p = self.payments[i]
+            out.append({"company_number": p.company_number, "amount": p.amount,
+                        "attestation_id": p.attestation_id, "recorded_at": p.recorded_at.isoformat()})
+            i -= 1
+        return out
+
+    @gl.public.view
+    def get_config(self) -> dict:
+        return {"owner": self.owner.as_hex, "kyb_address": self.kyb_address.as_hex,
+                "max_age_seconds": self.max_age_seconds, "vendor_count": len(self.vendors),
+                "payment_count": len(self.payments)}
