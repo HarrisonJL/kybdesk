@@ -108,22 +108,6 @@ validator ignores LLM disagreement
     if leader.get("adverse") is None:
         return False
 ===
-freshness ignored
----
-        return 0 <= age <= max_age_seconds
----
-        return True
-===
-consumer view accepts AT_RISK
----
-        if a.verdict != "GOOD_STANDING":
-            return False
-        age
----
-        if a.verdict not in ("GOOD_STANDING", "AT_RISK"):
-            return False
-        age
-===
 officer delta never flags change
 ---
     return "UNCHANGED" if previous_value == current_value else "CHANGED"
@@ -351,3 +335,15 @@ history chain not recorded
         record.previous_id = entity.latest_id if has_previous else u32(0)
 ---
         record.previous_id = u32(0)
+===
+good-standing alias always true
+---
+        return self.is_approved(company_number, max_age_seconds)
+---
+        return True
+===
+good-standing alias ignores the caller's max age
+---
+        return self.is_approved(company_number, max_age_seconds)
+---
+        return self.is_approved(company_number, 10**9)

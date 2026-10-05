@@ -128,8 +128,8 @@ def test_approval_reasons_in_order(direct_vm, direct_deploy, direct_owner):
     _warp(direct_vm, VALID_FULL.replace("+00:00", "Z"))  # exactly valid_until: expired
     assert es.get_approval(TESCO, 10**9)["reason"] == "EXPIRED"
     assert es.is_approved(TESCO, 10**9) is False
-    # v1's consumer view knows nothing of expiry: still true.
-    assert es.is_in_good_standing(TESCO, 10**9) is True
+    # EntityStanding v1's name for the same question is the same answer.
+    assert es.is_in_good_standing(TESCO, 10**9) is False
 
 
 # --- 3. History ----------------------------------------------------------------
@@ -300,8 +300,9 @@ def test_any_change_to_what_the_approval_rests_on_revokes_it(direct_vm, direct_d
     assert ap["approved"] is False and ap["reason"] == "REVOKED"
     assert es.is_approved(TESCO, 3600) is False
     assert es.get_entity(TESCO)["revoked"] is True
-    # The attestation itself is untouched: only the approval is revoked.
-    assert es.latest_verdict(TESCO) == "GOOD_STANDING" and es.is_in_good_standing(TESCO, 3600) is True
+    # The attestation itself is untouched: only the approval is revoked - and
+    # no view reports a revoked approval as good standing.
+    assert es.latest_verdict(TESCO) == "GOOD_STANDING" and es.is_in_good_standing(TESCO, 3600) is False
 
 
 def test_reattesting_is_the_only_way_to_restore_a_revoked_approval(direct_vm, direct_deploy, direct_owner):

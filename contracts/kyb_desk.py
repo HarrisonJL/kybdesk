@@ -961,18 +961,13 @@ class KYBDesk(gl.Contract):
     def is_approved(self, company_number: str, max_age_seconds: u32) -> bool:
         return self.get_approval(company_number, max_age_seconds)["approved"]
 
-    # Kept from EntityStanding v1 for its consumers: a fresh GOOD_STANDING,
-    # without KYB Desk's expiry and revocation. New consumers want is_approved.
+    # EntityStanding v1's name for the same question, kept so v1's interface
+    # (and its tests) still apply. It is exactly is_approved: there is one
+    # approval semantics here, and no view that is true for an expired or
+    # revoked approval.
     @gl.public.view
     def is_in_good_standing(self, company_number: str, max_age_seconds: u32) -> bool:
-        cn = _normalize_company_number(company_number)
-        if cn not in self.entities or self.entities[cn].attestation_count == 0:
-            return False
-        a = self.attestations[self.entities[cn].latest_id]
-        if a.verdict != "GOOD_STANDING":
-            return False
-        age = (_now() - a.attested_at).total_seconds()
-        return 0 <= age <= max_age_seconds
+        return self.is_approved(company_number, max_age_seconds)
 
     @gl.public.view
     def get_rules(self) -> dict:

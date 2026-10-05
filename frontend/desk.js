@@ -1,10 +1,10 @@
 // Written by studio-next/snapshot.ts - a snapshot of the live contracts.
 window.DESK = {
- "snapshot_at": "2026-10-05T13:06:23.923Z",
+ "snapshot_at": "2026-10-05T20:06:09.049Z",
  "chain": "GenLayer Studio Next (chain 61997)",
  "explorer": "https://explorer-studio-dev.genlayer.com",
  "desk": {
-  "address": "0xc9C8Dd8Fe79Ae433169A9Fb6cd1eA1E6069822fF",
+  "address": "0x962Ee34181C4981Be098527a4B2d8Fe0Ba31D8fB",
   "rules": {
    "approval_days": 30,
    "max_batch": 4,
@@ -23,9 +23,9 @@ window.DESK = {
   }
  },
  "gate": {
-  "address": "0xf97448d11167F5c05043e97307325A8aa76121E1",
+  "address": "0xEE0c01f1F73c470b1d5625f5658D916A6e697251",
   "config": {
-   "kyb_address": "0xc9C8Dd8Fe79Ae433169A9Fb6cd1eA1E6069822fF",
+   "kyb_address": "0x962Ee34181C4981Be098527a4B2d8Fe0Ba31D8fB",
    "max_age_seconds": 86400,
    "owner": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "payment_count": 2,
@@ -33,20 +33,20 @@ window.DESK = {
   },
   "vendors": [
    {
-    "approved_until": "2026-11-04T12:22:21.295020+00:00",
+    "approved_until": "2026-11-04T16:11:49.945557+00:00",
     "attestation_id": 1,
     "company_number": "00445790",
     "name": "Tesco PLC",
-    "onboarded_at": "2026-10-05T12:23:27.148790+00:00",
+    "onboarded_at": "2026-10-05T17:50:44.140840+00:00",
     "onboarded_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
     "paid": 5000
    },
    {
-    "approved_until": "2026-11-04T12:22:44.124673+00:00",
+    "approved_until": "2026-11-04T17:49:43.325621+00:00",
     "attestation_id": 4,
     "company_number": "14813324",
     "name": "Peninsula Storage",
-    "onboarded_at": "2026-10-05T12:23:33.348148+00:00",
+    "onboarded_at": "2026-10-05T17:50:51.686082+00:00",
     "onboarded_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
     "paid": 750
    }
@@ -56,13 +56,13 @@ window.DESK = {
     "amount": 750,
     "attestation_id": 4,
     "company_number": "14813324",
-    "recorded_at": "2026-10-05T12:24:04.622390+00:00"
+    "recorded_at": "2026-10-05T17:51:29.454764+00:00"
    },
    {
     "amount": 5000,
     "attestation_id": 1,
     "company_number": "00445790",
-    "recorded_at": "2026-10-05T12:23:57.606190+00:00"
+    "recorded_at": "2026-10-05T17:51:23.474437+00:00"
    }
   ]
  },
@@ -73,16 +73,16 @@ window.DESK = {
    "label": "J Sainsbury plc",
    "lei": "",
    "probe_count": 0,
-   "registered_at": "2026-10-05T12:21:36.438318+00:00",
+   "registered_at": "2026-10-05T15:51:12.546142+00:00",
    "registrant": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "revoked": false,
    "approval": {
     "approved": true,
     "attestation_id": 5,
-    "attested_at": "2026-10-05T12:22:44.124673+00:00",
+    "attested_at": "2026-10-05T17:49:43.325621+00:00",
     "company_number": "00185647",
     "reason": "APPROVED",
-    "valid_until": "2026-11-04T12:22:44.124673+00:00",
+    "valid_until": "2026-11-04T17:49:43.325621+00:00",
     "verdict": "GOOD_STANDING"
    },
    "history": [
@@ -90,7 +90,7 @@ window.DESK = {
      "accounts_overdue": false,
      "adverse_evidence": "",
      "attestation_id": 5,
-     "attested_at": "2026-10-05T12:22:44.124673+00:00",
+     "attested_at": "2026-10-05T17:49:43.325621+00:00",
      "company_name": "J SAINSBURY PLC",
      "company_number": "00185647",
      "confirmation_overdue": false,
@@ -134,7 +134,7 @@ window.DESK = {
      "status_changed": "BASELINE",
      "status_text": "Active",
      "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
-     "valid_until": "2026-11-04T12:22:44.124673+00:00",
+     "valid_until": "2026-11-04T17:49:43.325621+00:00",
      "verdict": "GOOD_STANDING"
     }
    ]
@@ -145,16 +145,16 @@ window.DESK = {
    "label": "Tesco PLC",
    "lei": "2138002P5RNKC5W2JZ46",
    "probe_count": 1,
-   "registered_at": "2026-10-05T12:21:10.216911+00:00",
+   "registered_at": "2026-10-05T15:48:02.713821+00:00",
    "registrant": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "revoked": false,
    "approval": {
     "approved": true,
     "attestation_id": 1,
-    "attested_at": "2026-10-05T12:22:21.295020+00:00",
+    "attested_at": "2026-10-05T16:11:49.945557+00:00",
     "company_number": "00445790",
     "reason": "APPROVED",
-    "valid_until": "2026-11-04T12:22:21.295020+00:00",
+    "valid_until": "2026-11-04T16:11:49.945557+00:00",
     "verdict": "GOOD_STANDING"
    },
    "history": [
@@ -162,7 +162,7 @@ window.DESK = {
      "accounts_overdue": false,
      "adverse_evidence": "",
      "attestation_id": 1,
-     "attested_at": "2026-10-05T12:22:21.295020+00:00",
+     "attested_at": "2026-10-05T16:11:49.945557+00:00",
      "company_name": "TESCO PLC",
      "company_number": "00445790",
      "confirmation_overdue": false,
@@ -206,14 +206,14 @@ window.DESK = {
      "status_changed": "UNCHANGED",
      "status_text": "Active",
      "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
-     "valid_until": "2026-11-04T12:22:21.295020+00:00",
+     "valid_until": "2026-11-04T16:11:49.945557+00:00",
      "verdict": "GOOD_STANDING"
     },
     {
      "accounts_overdue": false,
      "adverse_evidence": "",
      "attestation_id": 0,
-     "attested_at": "2026-10-05T12:21:53.149618+00:00",
+     "attested_at": "2026-10-05T15:53:22.781316+00:00",
      "company_name": "TESCO PLC",
      "company_number": "00445790",
      "confirmation_overdue": false,
@@ -257,7 +257,7 @@ window.DESK = {
      "status_changed": "BASELINE",
      "status_text": "Active",
      "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
-     "valid_until": "2026-11-04T12:21:53.149618+00:00",
+     "valid_until": "2026-11-04T15:53:22.781316+00:00",
      "verdict": "GOOD_STANDING"
     }
    ]
@@ -268,16 +268,16 @@ window.DESK = {
    "label": "Thomas Cook Group plc",
    "lei": "",
    "probe_count": 0,
-   "registered_at": "2026-10-05T12:21:16.337260+00:00",
+   "registered_at": "2026-10-05T15:48:14.377653+00:00",
    "registrant": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "revoked": false,
    "approval": {
     "approved": false,
     "attestation_id": 2,
-    "attested_at": "2026-10-05T12:22:44.124673+00:00",
+    "attested_at": "2026-10-05T17:49:43.325621+00:00",
     "company_number": "06091951",
     "reason": "VERDICT_NOT_IN_GOOD_STANDING",
-    "valid_until": "2026-10-05T12:22:44.124673+00:00",
+    "valid_until": "2026-10-05T17:49:43.325621+00:00",
     "verdict": "NOT_IN_GOOD_STANDING"
    },
    "history": [
@@ -285,7 +285,7 @@ window.DESK = {
      "accounts_overdue": true,
      "adverse_evidence": "",
      "attestation_id": 2,
-     "attested_at": "2026-10-05T12:22:44.124673+00:00",
+     "attested_at": "2026-10-05T17:49:43.325621+00:00",
      "company_name": "THOMAS COOK GROUP PLC",
      "company_number": "06091951",
      "confirmation_overdue": true,
@@ -337,7 +337,7 @@ window.DESK = {
      "status_changed": "BASELINE",
      "status_text": "Liquidation",
      "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
-     "valid_until": "2026-10-05T12:22:44.124673+00:00",
+     "valid_until": "2026-10-05T17:49:43.325621+00:00",
      "verdict": "NOT_IN_GOOD_STANDING"
     }
    ]
@@ -348,16 +348,16 @@ window.DESK = {
    "label": "Peninsula Storage Solutions Ltd",
    "lei": "",
    "probe_count": 0,
-   "registered_at": "2026-10-05T12:21:30.450750+00:00",
+   "registered_at": "2026-10-05T15:51:06.626211+00:00",
    "registrant": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "revoked": false,
    "approval": {
     "approved": true,
     "attestation_id": 4,
-    "attested_at": "2026-10-05T12:22:44.124673+00:00",
+    "attested_at": "2026-10-05T17:49:43.325621+00:00",
     "company_number": "14813324",
     "reason": "APPROVED",
-    "valid_until": "2026-11-04T12:22:44.124673+00:00",
+    "valid_until": "2026-11-04T17:49:43.325621+00:00",
     "verdict": "GOOD_STANDING"
    },
    "history": [
@@ -365,7 +365,7 @@ window.DESK = {
      "accounts_overdue": false,
      "adverse_evidence": "",
      "attestation_id": 4,
-     "attested_at": "2026-10-05T12:22:44.124673+00:00",
+     "attested_at": "2026-10-05T17:49:43.325621+00:00",
      "company_name": "PENINSULA STORAGE SOLUTIONS LTD",
      "company_number": "14813324",
      "confirmation_overdue": false,
@@ -409,7 +409,7 @@ window.DESK = {
      "status_changed": "BASELINE",
      "status_text": "Active",
      "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
-     "valid_until": "2026-11-04T12:22:44.124673+00:00",
+     "valid_until": "2026-11-04T17:49:43.325621+00:00",
      "verdict": "GOOD_STANDING"
     }
    ]
@@ -420,16 +420,16 @@ window.DESK = {
    "label": "UAS Business Solutions Ltd",
    "lei": "",
    "probe_count": 0,
-   "registered_at": "2026-10-05T12:21:23.206600+00:00",
+   "registered_at": "2026-10-05T15:48:20.336119+00:00",
    "registrant": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "revoked": false,
    "approval": {
     "approved": false,
     "attestation_id": 3,
-    "attested_at": "2026-10-05T12:22:44.124673+00:00",
+    "attested_at": "2026-10-05T17:49:43.325621+00:00",
     "company_number": "14814841",
     "reason": "VERDICT_NOT_IN_GOOD_STANDING",
-    "valid_until": "2026-10-05T12:22:44.124673+00:00",
+    "valid_until": "2026-10-05T17:49:43.325621+00:00",
     "verdict": "NOT_IN_GOOD_STANDING"
    },
    "history": [
@@ -437,7 +437,7 @@ window.DESK = {
      "accounts_overdue": false,
      "adverse_evidence": "",
      "attestation_id": 3,
-     "attested_at": "2026-10-05T12:22:44.124673+00:00",
+     "attested_at": "2026-10-05T17:49:43.325621+00:00",
      "company_name": "UAS BUSINESS SOLUTIONS LTD",
      "company_number": "14814841",
      "confirmation_overdue": true,
@@ -487,7 +487,7 @@ window.DESK = {
      "status_changed": "BASELINE",
      "status_text": "Active — Active proposal to strike off",
      "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
-     "valid_until": "2026-10-05T12:22:44.124673+00:00",
+     "valid_until": "2026-10-05T17:49:43.325621+00:00",
      "verdict": "NOT_IN_GOOD_STANDING"
     }
    ]
@@ -498,7 +498,7 @@ window.DESK = {
    "label": "Incorporated July 2026 (never attested)",
    "lei": "",
    "probe_count": 0,
-   "registered_at": "2026-10-05T12:21:42.372726+00:00",
+   "registered_at": "2026-10-05T15:51:18.591544+00:00",
    "registrant": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b",
    "revoked": false,
    "approval": {
@@ -528,7 +528,7 @@ window.DESK = {
    },
    "outcome": "UNCHANGED",
    "probe_id": 0,
-   "probed_at": "2026-10-05T12:23:18.414540+00:00",
+   "probed_at": "2026-10-05T17:50:19.070510+00:00",
    "submitted_by": "0x5cdb5699bc1038e115A973bb91A646f7E98C075b"
   }
  ],
@@ -537,7 +537,7 @@ window.DESK = {
    "step": "register",
    "call": null,
    "args": "00445790",
-   "tx": "0x87a24cc2561d7c8b7fdfe5bbc017f2081fa5ce840158ba4b8d0022f1e318ca81",
+   "tx": "0x8f97e61e295cfe9e9faa70db67d8065a8b47d5846bceb1874392f92d4da88d6b",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -545,7 +545,7 @@ window.DESK = {
    "step": "register",
    "call": null,
    "args": "06091951",
-   "tx": "0xa455132017cb213434d9d9064c4d6dec68dfce1f5826dde8b09922c77d291247",
+   "tx": "0x4f1b311ad448135d56af2af59f3e50fe3794b3594bf1d06c0a09daabe17f910f",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -553,7 +553,7 @@ window.DESK = {
    "step": "register",
    "call": null,
    "args": "14814841",
-   "tx": "0xd995bd689d39e8c49d5119ca729d8c6673df50f5bbffa071ac3857068d5b42aa",
+   "tx": "0x31304c8a43d045e29967fea7fd8167de89c986a7385f43626ed737ef8adf9aed",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -561,7 +561,7 @@ window.DESK = {
    "step": "register",
    "call": null,
    "args": "14813324",
-   "tx": "0x7cfa3a644abb5b0550e90de98fe4a24d5482f3495e331951a31825dcb957bcc6",
+   "tx": "0x347635b7ff8566f95bf2b666392e49d7cf74911b12a14bd4bf4f57549bc71e61",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -569,7 +569,7 @@ window.DESK = {
    "step": "register",
    "call": null,
    "args": "00185647",
-   "tx": "0x439625d6c2aa83467927cb372a9ea1010e930d2ed48c4f537efbb13e54cb0a52",
+   "tx": "0x90bf7481f6e73b52aa7f621f7f75624b59042ea3ba96a0a68784d99aee64c5a0",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -577,7 +577,7 @@ window.DESK = {
    "step": "register",
    "call": null,
    "args": "17310988",
-   "tx": "0x4c227230ed1410e96540c752bd640d05b60f418f48ea1a6fa3eb5f16aeb47169",
+   "tx": "0x2ef07d837b063d8aa08027710ba6e7d7001d4becdfd7c08ac91d6a1c3c0fcfa0",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -585,15 +585,7 @@ window.DESK = {
    "step": "attest",
    "call": null,
    "args": "00445790",
-   "tx": "0xd7ad1e87d39417924be6913b0c322e1f31906b42692bc95749f943a83663eeb7",
-   "result": "FINISHED_WITH_RETURN",
-   "revert": ""
-  },
-  {
-   "step": "attest",
-   "call": null,
-   "args": "00445790",
-   "tx": "0x251b970f6070aa588bb1cfb111853f2a5176e02f652c32fb82f3c8c3b497a371",
+   "tx": "0x99fbea08789db53b55d1d84121fcd86f5bd43d1dbe2517985f5a530e676e07ce",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -606,7 +598,7 @@ window.DESK = {
     "14813324",
     "00185647"
    ],
-   "tx": "0x6b03c449e41ab25cd904a521784a908234318ee58f820b16e4814f2ec1b49cb0",
+   "tx": "0x755b89ca1267e6125010d7a6cec68431bc08ed8fec26ff697ca5afc29a587dde",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -614,7 +606,7 @@ window.DESK = {
    "step": "probe",
    "call": null,
    "args": "00445790",
-   "tx": "0x954b7fdc52311fc24284c70e73b500114a5943681b376d760f6847541130f450",
+   "tx": "0x0d961a86794bebdf8279980f454fbf513d1fa5e72391efaab75db62384152ad4",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -625,7 +617,7 @@ window.DESK = {
     "00445790",
     "Tesco PLC"
    ],
-   "tx": "0xedbe97e3f62f8b385dc94e6d4d66e72b91ee39b07c62ea5d9440d26fb3e3a10b",
+   "tx": "0xf5272ca67d03513293e1c1e45fa698e34e9248bdf57b4f35d7ad4f5480318d3e",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -636,7 +628,7 @@ window.DESK = {
     "14813324",
     "Peninsula Storage"
    ],
-   "tx": "0x9bccf3b28bee21f43cea2add933da9f605202b7522b4df5021844973c15c3e2a",
+   "tx": "0x1f45ef161a92060179afb33d6bd21c63f4f69d7a23b1369a37f55b4b1bf13333",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -647,7 +639,7 @@ window.DESK = {
     "06091951",
     "Thomas Cook"
    ],
-   "tx": "0x7a9b45f6f00b05d53492835120ea2f325198321521af5fbf8312ff2eb323cad6",
+   "tx": "0x18b5680ad4162dcc5541f132e6a1e68c558c15302ddfa8057d60f0281d4ca689",
    "result": "FINISHED_WITH_ERROR",
    "revert": "onboarding 06091951 refused: KYB Desk says VERDICT_NOT_IN_GOOD_STANDING"
   },
@@ -658,7 +650,7 @@ window.DESK = {
     "14814841",
     "UAS Business Solutions"
    ],
-   "tx": "0xcec6de49b9420c720cdb358b1a589d84780522c56d71abbe688853dd6ed8c801",
+   "tx": "0x527b3b069d8b6e9cb313e9fbd02e2d9875ca61719c9967e9f35a30991bcd29ff",
    "result": "FINISHED_WITH_ERROR",
    "revert": "onboarding 14814841 refused: KYB Desk says VERDICT_NOT_IN_GOOD_STANDING"
   },
@@ -669,7 +661,7 @@ window.DESK = {
     "17310988",
     "Never attested"
    ],
-   "tx": "0x14dde92e9994101a50c9e0029564129c2af3cf9e36ca8563aee89bb334d4d0d2",
+   "tx": "0xf8fb86a8708a90012f0b3494b7269faceedbc739d47a535c72f2347f24b7698e",
    "result": "FINISHED_WITH_ERROR",
    "revert": "onboarding 17310988 refused: KYB Desk says NO_ATTESTATION"
   },
@@ -680,7 +672,7 @@ window.DESK = {
     "00445790",
     5000
    ],
-   "tx": "0xe9d4429b838d02e1172d6e7fda557118f56ae3df864fad56c4642574fe4df2dc",
+   "tx": "0x95419b531e73c2d9dba8596df6707b28920e495a08bc9f34451a64310b7cca6e",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -691,7 +683,7 @@ window.DESK = {
     "14813324",
     750
    ],
-   "tx": "0x9a680b02799f8f2b7c97bce3d2dc94f47f9cdf985f28784162888386a2f274e1",
+   "tx": "0x9b91b3e262dd1a288cb582edf36066b86fb6e22b613eba2e66226c0c904f41e7",
    "result": "FINISHED_WITH_RETURN",
    "revert": ""
   },
@@ -702,7 +694,7 @@ window.DESK = {
     "06091951",
     100
    ],
-   "tx": "0xd2090303ec9c70768a6b3cae2cfa6528b3c2ae812879fdb6f0a096f6cfec818c",
+   "tx": "0xa76cadc16c53425ab964a8057c5ed17ac20c993573d0a352c2ac04d1e37258fc",
    "result": "FINISHED_WITH_ERROR",
    "revert": "supplier not onboarded"
   }

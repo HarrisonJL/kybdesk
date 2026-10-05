@@ -6,13 +6,16 @@
 import * as fs from "fs";
 import { readClient, safeJson, EXPLORER } from "./lib";
 
-const DESK = process.argv[2] ?? "0xc9C8Dd8Fe79Ae433169A9Fb6cd1eA1E6069822fF";
-const GATE = process.argv[3] ?? "0xf97448d11167F5c05043e97307325A8aa76121E1";
+const DESK = process.argv[2] ?? "0x962Ee34181C4981Be098527a4B2d8Fe0Ba31D8fB";
+const GATE = process.argv[3] ?? "0xEE0c01f1F73c470b1d5625f5658D916A6e697251";
 
 async function main() {
   const r = readClient();
-  const view = async (address: string, fn: string, args: unknown[] = []) =>
-    JSON.parse(safeJson(await r.readContract({ address, functionName: fn, args })));
+  // Studio Next's RPC allows 30 requests a minute: pace reads under it.
+  const view = async (address: string, fn: string, args: unknown[] = []) => {
+    await new Promise((res) => setTimeout(res, 2200));
+    return JSON.parse(safeJson(await r.readContract({ address, functionName: fn, args })));
+  };
 
   const config = await view(GATE, "get_config");
   const maxAge: number = Number(config.max_age_seconds);

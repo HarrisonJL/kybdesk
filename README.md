@@ -5,8 +5,8 @@
 | | |
 |---|---|
 | Network | GenLayer Studio Next (chain 61997) |
-| KYBDesk | [`0xc9C8Dd8Fe79Ae433169A9Fb6cd1eA1E6069822fF`](https://explorer-studio-dev.genlayer.com/address/0xc9C8Dd8Fe79Ae433169A9Fb6cd1eA1E6069822fF) |
-| OnboardingGate (consumer) | [`0xf97448d11167F5c05043e97307325A8aa76121E1`](https://explorer-studio-dev.genlayer.com/address/0xf97448d11167F5c05043e97307325A8aa76121E1) |
+| KYBDesk | [`0x962Ee34181C4981Be098527a4B2d8Fe0Ba31D8fB`](https://explorer-studio-dev.genlayer.com/address/0x962Ee34181C4981Be098527a4B2d8Fe0Ba31D8fB) |
+| OnboardingGate (consumer) | [`0xEE0c01f1F73c470b1d5625f5658D916A6e697251`](https://explorer-studio-dev.genlayer.com/address/0xEE0c01f1F73c470b1d5625f5658D916A6e697251) |
 | Live proof | [CONTRACT.md](CONTRACT.md): six real companies, a four-company batch, a probe, eight gate calls, every transaction unanimous |
 | Tests | 96 Direct Mode tests on real Companies House captures; 52/52 safety mutations killed |
 | Frontend | [`frontend/index.html`](frontend/index.html): a static desk view of the live contracts (see "Frontend") |
@@ -29,7 +29,7 @@ What v2 adds, because a single "good standing" fact isn't what an onboarding des
 | **`get_history(company, n)`** | A company's own attestation chain, newest first, by following `previous_id` links. Interleaved attestations of other companies don't matter. |
 | **`get_approval` / `is_approved`** | *Why* a company is or isn't approved right now: `APPROVED`, `NO_ATTESTATION`, `VERDICT_<X>`, `REVOKED`, `EXPIRED` or `STALE` (the caller's own `max_age_seconds`). `is_approved` is the consumer view. |
 
-The v1 consumer view `is_in_good_standing` is kept for v1's consumers. It knows nothing of expiry or revocation. New consumers want `is_approved`.
+`is_in_good_standing` (EntityStanding v1's name for the question) is exactly `is_approved`: there is one approval semantics, and no view that is true for an expired or revoked approval.
 
 ## How an approval is decided, and ends
 
@@ -84,7 +84,7 @@ python3 scripts/mutation_check.py             # 52/52 mutations killed
 - **Real pages.** Every Companies House page and GLEIF record is a real capture (`tests/fixtures/PROVENANCE.md`, built by `scripts/build_fixtures.py`) with personal data removed at capture time. Edge cases are made by editing one element of a real page: a deadline moved to 10 October, a status set to "Active - Active proposal to strike off".
 - **v1's 54 tests, unchanged**, plus **31 new** in `test_kyb_desk_v2.py` covering expiry (30-day cap, either deadline, a deadline falling today, non-approvals), `get_approval`'s reasons in order, history across interleaved companies, batches (mixed verdicts, an adverse company among clean ones, malformed batches that record nothing, a network failure that records nothing, the validator rejecting each kind of tampering), and the tripwire (each field, revocation, restoration by re-attesting, unreadable pages, preconditions, validator rejection of a probe that hides a change).
 - **11 gate tests** for everything before OnboardingGate's cross-contract call. That call can't run in Direct Mode (no glsim hook), so it's proven live: allowed and refused onboardings and payments, with the desk's reason in each revert message.
-- **Mutation check.** `tests/mutations.txt` lists 52 deliberate breakages (26 inherited from v1, retargeted to where the code now lives, and 26 for what's new), each removing one safety property, such as the deadline clamp, the revocation, the batch's member check and the history chain. `scripts/mutation_check.py` confirms the suite catches every one. It runs each suite in its own process group with a timeout and restores the contract however it ends.
+- **Mutation check.** `tests/mutations.txt` lists 52 deliberate breakages (24 inherited from EntityStanding v1, retargeted to where the code now lives, and 28 for what's new), each removing one safety property, such as the deadline clamp, the revocation, the batch's member check and the history chain. `scripts/mutation_check.py` confirms the suite catches every one. It runs each suite in its own process group with a timeout and restores the contract however it ends.
 - `contracts/*.py` are the tested sources (GenVM v0.2.11); `contracts/*_studio_next.py` are mechanical ports (`scripts/port_to_studio_next.py`), and the on-chain code is byte-identical to them (`studio-next/verify_code.ts`).
 
 ## Frontend
@@ -100,6 +100,9 @@ python3 scripts/mutation_check.py             # 52/52 mutations killed
 - **`AT_RISK` hasn't occurred live** (inherited from v1): it needs an *Active*, up-to-date company with an unresolved adverse filing, which didn't exist on the demo day. It is proven in tests built from real pages, and the reader is proven live on its hardest negative case (a discontinued strike-off, read `GOOD_STANDING` inside the live batch).
 - **Good standing is not creditworthiness.** This attests what the public register says; it is not legal, credit or investment advice.
 
+- **Availability is never traded for safety.** Anyone can pay for a fresh check, and the latest check wins. If a source is momentarily unreachable, that check records `UNVERIFIED` (or fails and records nothing), and consumers fail closed until the next good check. A griefer can make a good approval temporarily unavailable, never a bad one look good, and the next check restores it.
+- **Prompt injection.** As EntityStanding: some filing descriptions carry company-supplied wording; the reader treats it as untrusted data and can only *downgrade*, so an injection could at worst suppress an early-warning downgrade, never produce `GOOD_STANDING`, which the deterministic spine alone grants.
+- **Company numbers are first-come, and the LEI binding is immutable** (inherited from EntityStanding). A stranger who registers a company number with an LEI that isn't the company's makes that number read `UNVERIFIED` (`lei_check:NOT_THIS_COMPANY`), and it can't be re-registered. It is visible and attributable (`get_entity` shows the LEI and the registrant), so a consumer should read it and fail closed, but it is a real griefing path; keying entities by an id the registrant chooses would remove it. `OnboardingGate` is owner-only and takes the owner's chosen company numbers, to show the gate.
 ## Repository layout
 
 ```

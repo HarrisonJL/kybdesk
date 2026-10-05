@@ -48,8 +48,11 @@ async function main() {
   const c = client();
   const r = readClient();
   const votes = (tx: any) => tx.last_round?.validator_votes_name ?? [];
-  const view = async (address: string, fn: string, args: unknown[]) =>
-    JSON.parse(safeJson(await r.readContract({ address, functionName: fn, args })));
+  // Studio Next's RPC allows 30 requests a minute: pace reads under it.
+  const view = async (address: string, fn: string, args: unknown[]) => {
+    await new Promise((res) => setTimeout(res, 2200));
+    return JSON.parse(safeJson(await r.readContract({ address, functionName: fn, args })));
+  };
 
   if (step === "register") {
     const have = new Set((await view(desk, "list_entities", [])).map((e: any) => e.company_number));
@@ -101,7 +104,10 @@ async function main() {
       console.log(`  ${fn}(${args.join(", ")}) -> ${tx.txExecutionResultName} ${message}`);
     }
   } else if (step === "read") {
+    const done = new Set(JSON.parse(fs.existsSync("live_proof.json") ? fs.readFileSync("live_proof.json", "utf-8") : "[]")
+      .filter((e: any) => e.step === "read").map((e: any) => e.company_number));
     for (const [cn] of COMPANIES) {
+      if (done.has(cn)) continue; // resumable after a transient RPC error
       const ap = await view(desk, "get_approval", [cn, 86400]);
       const ok = await view(desk, "is_approved", [cn, 86400]);
       const tight = await view(desk, "is_approved", [cn, 1]);
