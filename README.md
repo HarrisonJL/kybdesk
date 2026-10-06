@@ -9,7 +9,7 @@
 | OnboardingGate (consumer) | [`0xEE0c01f1F73c470b1d5625f5658D916A6e697251`](https://explorer-studio-dev.genlayer.com/address/0xEE0c01f1F73c470b1d5625f5658D916A6e697251) |
 | Live proof | [CONTRACT.md](CONTRACT.md): six real companies, a four-company batch, a probe, eight gate calls, every transaction unanimous |
 | Tests | 96 Direct Mode tests on real Companies House captures; 52/52 safety mutations killed |
-| Frontend | [`frontend/index.html`](frontend/index.html): a static desk view of the live contracts (see "Frontend") |
+| Live app | [`web/`](web): a React app that reads the live contracts and sends real transactions to them (see "Frontend") |
 
 ## What this builds on, and what it adds
 
@@ -89,7 +89,20 @@ python3 scripts/mutation_check.py             # 52/52 mutations killed
 
 ## Frontend
 
-`frontend/index.html` is a static page (no build step) that shows the desk as a supplier-risk officer would use it. For each counterparty: its approval, why, and how long it lasts; a timeline of its attestations; its probes; and the gate's ledger. It renders `frontend/desk.js`, a snapshot of the live contracts written by `npm run snapshot` in `studio-next/` (it reads both contracts through genlayer-js and records when; being a plain script, the page also works opened straight from disk). Countdowns, and whether the gate would pay or refuse *now*, are computed in the browser against the clock, so an approval visibly runs out and a stale snapshot ages honestly. The page says when its snapshot was taken and links every contract and transaction to the explorer.
+`web/` is a Vite + React + TypeScript app. It is a supplier-risk officer's view of the live desk (every counterparty's approval, the reason, how long it lasts, its history of checks, the gate's ledger), and it is also a client: a visitor can register a company, check one or up to four at once, and probe an approved one, and each of those is a real transaction on the deployed contract.
+
+- **Accounts.** Connect a wallet (MetaMask, which the app adds the Studio Next network to), or use a temporary in-browser account and fund it from the network's faucet. The temporary key lives only in that browser and is for the testnet only.
+- **The whole transaction lifecycle is shown, not just the send.** The panel follows the transaction as the network does: pending, a leader proposing, validators committing, then the outcome with each validator's vote. Only `ACCEPTED` and `FINALIZED` count as success. `CANCELED`, `UNDETERMINED` and a timeout are shown as failures. A transaction the contract rejected (`FINISHED_WITH_ERROR`) is shown as a rejection with the contract's own reason (for example `company_number already registered`), never as success.
+- **The result shown is the record that transaction created.** It is not "the latest record". After an accepted transaction the app reads the contract's counters from *before* the call and shows only attestations or probes at or past that count, from this sender, about the subjects submitted; if it cannot find them it says so instead of showing something else.
+- **State comes from the contract, not the page.** Approvals are the contract's own `get_approval` answer, counted down in the browser against the clock; buttons the contract would refuse (a probe on a company with no live approval) are disabled with the reason. A load brackets its reads with the desk's counters and re-reads if a transaction landed halfway through, so a card never mixes two moments.
+- **The public RPC allows 30 requests a minute and eight concurrent executions.** Reads are paced under that (two in flight, the window kept in `localStorage` so reloads and tabs share it), a `429` is waited out rather than shown as an error, and the last good snapshot is painted at once, labelled as a past read, while the live read runs.
+
+```bash
+cd web && npm install && npm run dev      # http://localhost:5173
+npm run build                             # type-check + production build into dist/
+```
+
+Transactions sent from the app after the recorded live proof (CONTRACT.md) are on chain with the same record shape: attestation #6 (a re-check of J Sainsbury plc, chained to #5) and #7 and #8 (Tesco and Peninsula Storage Solutions, one batch transaction, chained to their previous checks), all from throwaway browser accounts and all unanimous. They are in the desk's state (`get_state`: 9 attestations), not in `studio-next/live_proof.json`, which is the scripted run.
 
 ## Known limitations
 
@@ -111,7 +124,7 @@ contracts/kyb_desk_studio_next.py        deployed port (Studio Next)
 contracts/onboarding_gate*.py            consumer contract + port
 tests/                                   v1's 54 tests (test_kyb_desk.py), v2's 31, the gate's 11, fixtures, mutations.txt
 scripts/                                 fixture capture, port, mutation check
-studio-next/                             deploy, schema check, snapshot, live proof (prove.ts, live_proof.json), verify_code.ts
-frontend/                                static desk view (index.html) + data snapshot (desk.js)
+studio-next/                             deploy, schema check, live proof (prove.ts, live_proof.json), verify_code.ts
+web/                                     live app (React): reads the contracts, sends register / check / probe transactions
 research/                                v1's connectivity probes (why a plain HTTP fetch of Companies House works on Studio Next)
 ```
