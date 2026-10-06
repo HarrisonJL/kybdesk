@@ -98,7 +98,8 @@ function AttestationResult({ a }: { a: any }) {
     <div className="result">
       <div><b>{a.company_name || a.company_number}</b> <Pill tone={VERDICT_TONE[a.verdict] ?? "none"}>{a.verdict.replaceAll("_", " ")}</Pill></div>
       <div className="sm">
-        attestation #{a.attestation_id}{a.previous_id !== null ? ` after #${a.previous_id}` : " (first)"} · valid until {fmtTime(a.valid_until)}
+        attestation #{a.attestation_id}{a.previous_id !== null ? ` after #${a.previous_id}` : " (first)"}
+        {a.verdict === "GOOD_STANDING" ? ` · approved until ${fmtTime(a.valid_until)}` : " · not an approval"}
         {a.reasons.length > 0 && ` · ${a.reasons.join(", ")}`}
       </div>
     </div>
@@ -128,6 +129,7 @@ export default function App() {
     if (!signer) return;
     const single = numbers.length === 1;
     const label = single ? `Check ${numbers[0]}` : `Check ${numbers.length} companies in one transaction`;
+    tx.starting(label);
     let before: number;
     try { before = (await countBefore()).attestation_count; } catch (e) { return tx.fail(label, e); }
     const ok = await tx.run(signer, DESK, single ? "attest" : "attest_batch", single ? [numbers[0]] : [numbers],
@@ -137,6 +139,7 @@ export default function App() {
   }
   async function probe(number: string) {
     if (!signer) return;
+    tx.starting(`Probe ${number}`);
     let before: number;
     try { before = (await countBefore()).probe_count; } catch (e) { return tx.fail(`Probe ${number}`, e); }
     const ok = await tx.run(signer, DESK, "probe", [number], `Probe ${number}`,

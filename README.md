@@ -102,7 +102,7 @@ cd web && npm install && npm run dev      # http://localhost:5173
 npm run build                             # type-check + production build into dist/
 ```
 
-Transactions sent from the app after the recorded live proof (CONTRACT.md) are on chain with the same record shape: attestation #6 (a re-check of J Sainsbury plc, chained to #5) and #7 and #8 (Tesco and Peninsula Storage Solutions, one batch transaction, chained to their previous checks), all from throwaway browser accounts and all unanimous. They are in the desk's state (`get_state`: 9 attestations), not in `studio-next/live_proof.json`, which is the scripted run.
+Transactions sent from the app after the recorded live proof (CONTRACT.md) are on chain with the same record shape: attestation #6 (a re-check of J Sainsbury plc, chained to #5) and #7 and #8 (Tesco and Peninsula Storage Solutions, one batch transaction, chained to their previous checks), all from throwaway browser accounts and all unanimous. They are in the desk's state, not in `studio-next/live_proof.json`, which is the scripted run. The counts only grow: anyone using the app adds checks, so `get_state` will read higher than the live-proof table.
 
 ## Known limitations
 
