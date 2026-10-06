@@ -27,6 +27,13 @@ describe("classify", () => {
     }
   });
 
+  it("keeps a revert message that contains a URL whole", () => {
+    const tx = { status: 5, txExecutionResultName: "FINISHED_WITH_ERROR",
+                 result: "website must be a hostname or URL, e.g. https://www.example.eu" };
+    const out = classify(tx, "hint");
+    if (!out.ok) expect(out.message).toContain("https://www.example.eu");
+  });
+
   it("falls back to the hint when the revert text is not found", () => {
     const out = classify({ status: 7, txExecutionResultName: "FINISHED_WITH_ERROR" }, "the contract refused it");
     expect(out.ok).toBe(false);

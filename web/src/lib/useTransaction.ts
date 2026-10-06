@@ -57,5 +57,10 @@ export function useTransaction() {
     }
   }, []);
 
-  return { state, run, reset: () => setState({ stage: "idle" }) };
+  /** A failure before anything was sent (a read the call depends on), shown in the same panel. */
+  const fail = useCallback((label: string, e: unknown) => {
+    setState({ stage: "failed", label, kind: "other", error: errorText(e) });
+  }, []);
+
+  return { state, run, fail, reset: () => setState({ stage: "idle" }) };
 }

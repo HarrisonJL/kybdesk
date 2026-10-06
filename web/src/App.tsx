@@ -126,8 +126,10 @@ export default function App() {
 
   async function check(numbers: string[]) {
     if (!signer) return;
-    const before = (await countBefore()).attestation_count;
     const single = numbers.length === 1;
+    const label = single ? `Check ${numbers[0]}` : `Check ${numbers.length} companies in one transaction`;
+    let before: number;
+    try { before = (await countBefore()).attestation_count; } catch (e) { return tx.fail(label, e); }
     const ok = await tx.run(signer, DESK, single ? "attest" : "attest_batch", single ? [numbers[0]] : [numbers],
       single ? `Check ${numbers[0]}` : `Check ${numbers.length} companies in one transaction`,
       "that company number isn't registered.", () => boundAttestations(before, signer, numbers));
@@ -135,7 +137,8 @@ export default function App() {
   }
   async function probe(number: string) {
     if (!signer) return;
-    const before = (await countBefore()).probe_count;
+    let before: number;
+    try { before = (await countBefore()).probe_count; } catch (e) { return tx.fail(`Probe ${number}`, e); }
     const ok = await tx.run(signer, DESK, "probe", [number], `Probe ${number}`,
       "a probe needs a registered company with a live, unrevoked approval.", () => boundProbe(before, signer, number));
     if (ok) void refresh();

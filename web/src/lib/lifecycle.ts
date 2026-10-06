@@ -74,7 +74,7 @@ export function revertMessage(tx: any): string {
   const walk = (o: any, depth = 0) => {
     if (depth > 8) return;
     if (typeof o === "string") {
-      const m = o.match(/([A-Za-z0-9_' ,.:()\-]{0,80}(?:not registered|already registered|must be|must name|attest first|not an approval|already revoked|a batch holds|once per batch|unknown firm_id|checksum failed|refused|blocked)[A-Za-z0-9_' ,.:()\-]{0,100})/);
+      const m = o.match(/([A-Za-z0-9_' ,.:()/\-]{0,80}(?:not registered|already registered|must be|must name|attest first|not an approval|already revoked|a batch holds|once per batch|unknown firm_id|checksum failed|refused|blocked)[A-Za-z0-9_' ,.:()/\-]{0,100})/);
       if (m) found.push(m[1].trim());
     } else if (o && typeof o === "object") Object.values(o).forEach((x) => walk(x, depth + 1));
   };
